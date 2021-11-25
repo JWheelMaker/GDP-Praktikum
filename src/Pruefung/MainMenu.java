@@ -20,10 +20,11 @@ public class MainMenu {
 
     public static void printMenu() {
         System.out.println("please enter a number to choose one of the following: ");
-        System.out.println("1 for action-menu");
-        System.out.println("2 for evaluation");
-        System.out.println("3 to continue ");
         System.out.println("0 to end the game ");
+        System.out.println("1 to continue ");
+        System.out.println("2 for evaluation");
+        System.out.println("3 for applicants");
+        System.out.println("4 project-menu");
     }
 
     public static boolean menu(GameDevStudio studio) {
@@ -33,17 +34,11 @@ public class MainMenu {
             var input = sc.nextInt();
             sc.nextLine();
             switch (input) {
+                case 0: {
+                    System.out.println("game stopped");
+                    return false;
+                }
                 case 1: {
-                    System.out.println("action-menu: ");
-                    action();
-                    break;
-                }
-                case 2: {
-                    System.out.println("Evaluation: ");
-                    evaluation(studio, Game.get().getEventLog());
-                    break; //ensures ability to make a decision despite evaluating
-                }
-                case 3: {
                     if ((studio.getCash().getValue().intValue() <= 0)) {
                         System.out.println("You are bankrupt!");
                         return false;
@@ -59,9 +54,19 @@ public class MainMenu {
                     return true;
 
                 }
-                case 0: {
-                    System.out.println("game stopped");
-                    return false;
+                case 2: {
+                    System.out.println("Evaluation: ");
+                    subMenus.evaluation(studio, Game.get().getEventLog());
+                    break; //ensures ability to make a decision despite evaluating
+                }
+                case 3: {
+                    System.out.println("applicants: ");
+                    subMenus.applicants(studio
+                    );
+                    break;
+                }
+                case 4: {
+                    subMenus.projects(studio);
                 }
                 default: {
                     System.out.println("not a valid input. The game will be stopped.");
