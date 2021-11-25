@@ -1,6 +1,7 @@
 package Pruefung;
 
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
+import gmbh.kdb.hsw.gdp.domain.Money;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -50,21 +51,26 @@ public class SubMenus {
     }
 
     public static void applicants(GameDevStudio studio) {
-        BigDecimal costs = calcCosts(studio);
+        Money costs = calcCosts(studio);
 
         System.out.println("---------------------------------------");
         for (int i = 0; i < studio.getApplications().size(); i++) {
-            System.out.println(i+1 + ".  " + studio.getApplications().get(i).getDeveloper().getName().getName());
+            System.out.println(i + 1 + ".  " + studio.getApplications().get(i).getDeveloper().getName().getName());
 
             //subtracting the costs of employing from capital
-            BigDecimal remaining = studio.getCash().getValue().subtract(studio.getApplications().get(i).getHireBonus().getValue().add(studio.getApplications().get(i).getHireAgentFee().getValue()));
+            Money remaining = studio.getCash();
+            remaining = remaining.subtract(studio.getApplications().get(i).getHireBonus());
+            remaining = remaining.subtract(studio.getApplications().get(i).getHireAgentFee());
 
             System.out.println("Remaining capital: " + remaining);
 
             //calculating the new costs per round and remaining rounds
-            BigDecimal newCosts = costs.add(studio.getApplications().get(i).getDeveloper().getSalary().getValue());
-            BigDecimal remainingRounds = studio.getCash().getValue().subtract(studio.getApplications().get(i).getHireBonus().getValue().add(studio.getApplications().get(i).getHireAgentFee().getValue()).divide(newCosts));
-
+            Money newCosts = costs.add(studio.getApplications().get(i).getDeveloper().getSalary());
+            int remainingRounds = 0;
+            while (remaining.isGreaterThan(newCosts)) {
+                remaining = remaining.subtract(newCosts);
+                remainingRounds++;
+            }
             System.out.println("Remaining game rounds: " + remainingRounds);
 
         }
@@ -72,24 +78,26 @@ public class SubMenus {
 
         System.out.println("Would you like to hire one of the above? (yes/no)");
         String input = scanner.nextLine();
-        if (input.equals("yes") || input.equals("y") || input.equals("Yes")) {
+        if (input.equalsIgnoreCase("yes") || input.equals("y")) {
+            // new applicant will always be employed at the first office
+            //studio.acceptApplication(studio.getApplications().get(inputInt), studio.getOffices().get(0));
             System.out.println("Please enter a valid application number or die ");
             int inputInt = scanner.nextInt();
             scanner.nextLine();
-            // new applicant will always be employed at the first office
-            studio.acceptApplication(studio.getApplications().get(inputInt), studio.getOffices().get(0));
+
+
 
 
         }
     }
 
-    public static BigDecimal calcCosts(GameDevStudio studio) {
-        BigDecimal sum = new BigDecimal(0);
+    public static Money calcCosts(GameDevStudio studio) {
+        Money sum = new Money(new BigDecimal(0));
 
         for (int i = 0; i < studio.getOffices().size(); i++) {
-            sum.add(studio.getOffices().get(i).getLease().getValue());
+            sum = sum.add(studio.getOffices().get(i).getLease());
             for (int j = 0; j < studio.getOffices().get(i).getDevelopers().size(); j++) {
-                sum.add(studio.getOffices().get(i).getDevelopers().get(j).getSalary().getValue());
+                sum = sum.add(studio.getOffices().get(i).getDevelopers().get(j).getSalary());
             }
         }
         return sum;

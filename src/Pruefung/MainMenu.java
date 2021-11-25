@@ -16,6 +16,7 @@ public class MainMenu {
 
             return menu(studio);
         }).start();
+        //merkel();
     }
 
     public static void printMenu() {
