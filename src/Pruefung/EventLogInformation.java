@@ -8,7 +8,7 @@ public class EventLogInformation {
     private GameDevStudio log;
     private List<String> eventlog;
 
-    public EventLogInformation(GameDevStudio log, List<String> eventlog){
+    public EventLogInformation(GameDevStudio log, List<String> eventlog) {
         this.log = log;
         this.eventlog = eventlog;
     }
