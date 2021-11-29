@@ -57,17 +57,18 @@ public class MainMenu {
                 }
                 case 2: {
                     System.out.println("Evaluation: ");
-                    subMenus.evaluation(studio, Game.get().getEventLog());
+                    SubMenus.evaluation(studio, Game.get().getEventLog());
                     break; //ensures ability to make a decision despite evaluating
                 }
                 case 3: {
                     System.out.println("applicants: ");
-                    subMenus.applicants(studio
-                    );
+                    SubMenus.applicants(studio);
                     break;
                 }
                 case 4: {
-                    subMenus.projects(studio);
+                    System.out.println("projects");
+                    SubMenus.projects(studio);
+                    break;
                 }
                 default: {
                     System.out.println("not a valid input. The game will be stopped.");
