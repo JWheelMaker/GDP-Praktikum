@@ -1,98 +1,106 @@
 package Pruefung;
 
-import gmbh.kdb.hsw.gdp.domain.Developer;
-import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
-import gmbh.kdb.hsw.gdp.domain.Money;
+import gmbh.kdb.hsw.gdp.domain.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
 public class SubMenus {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void evaluation(GameDevStudio studio, List<String> eventLog) {
+
         DeveloperInformation devInfo = new DeveloperInformation(studio);
         OfficeInformation officeInfo = new OfficeInformation(studio);
-        EventLogInformation eventLogInfo = new EventLogInformation(studio, eventLog);
-        while (true) {
-            System.out.println("");
+        EventLogInformation eventLogInfo = new EventLogInformation(eventLog);
 
+        while (true) {
+            System.out.println();
             System.out.println("choose one of the following: ");
             System.out.println("1 to show Event Log ");
             System.out.println("2 to show office information");
             System.out.println("3 to show developer information");
             System.out.println("4 to exit evaluation menu");
+
+            //getting user input
             Scanner sc = new Scanner(System.in);
             var input = sc.nextInt();
 
 
             switch (input) {
-                case 1: {
-                    //Event log
-                    eventLogInfo.print();
-                    break;
-                }
-                case 2: {
-                    //Office overview
-                    officeInfo.print();
-                    break;
-                }
-                case 3: {
-                    //Developer
-                    devInfo.print();
-                    break;
-                }
-                case 4: {
+                case 1 -> //Event log
+                        eventLogInfo.print();
+                case 2 -> //Office overview
+                        officeInfo.print();
+                case 3 -> //Developer
+                        devInfo.print();
+                case 4 -> {
                     return;
                 }
-                default:
+                default -> {
+                }
             }
         }
     }
 
     public static void applicants(GameDevStudio studio) {
-        Money costs = calcCosts(studio);
+        while (true) {
+            System.out.println("---------------------------------------");
+            if (!studio.getApplications().isEmpty()) {
 
-        System.out.println("---------------------------------------");
-        for (int i = 0; i < studio.getApplications().size(); i++) {
-            System.out.println(i + 1 + ".  " + studio.getApplications().get(i).getDeveloper().getName().getName());
+                Money costs = calcCosts(studio);
 
-            //subtracting the costs of employing from capital
-            Money remaining = studio.getCash();
-            remaining = remaining.subtract(studio.getApplications().get(i).getHireBonus());
-            remaining = remaining.subtract(studio.getApplications().get(i).getHireAgentFee());
+                for (int i = 0; i < studio.getApplications().size(); i++) {
+                    System.out.println(i + 1 + ".  " + studio.getApplications().get(i).getDeveloper().getName().getName());
 
-            System.out.println("Remaining capital: " + remaining);
+                    //subtracting the costs of employing from capital
+                    Money remaining = studio.getCash();
+                    remaining = remaining.subtract(studio.getApplications().get(i).getHireBonus());
+                    remaining = remaining.subtract(studio.getApplications().get(i).getHireAgentFee());
 
-            //calculating the new costs per round and remaining rounds
-            Money newCosts = costs.add(studio.getApplications().get(i).getDeveloper().getSalary());
-            int remainingRounds = 0;
-            while (remaining.isGreaterThan(newCosts)) {
-                remaining = remaining.subtract(newCosts);
-                remainingRounds++;
+                    System.out.println("Remaining capital: " + remaining);
+
+                    //calculating the new costs per round and remaining rounds until bankrupt
+                    Money newCosts = costs.add(studio.getApplications().get(i).getDeveloper().getSalary());
+                    int remainingRounds = 0;
+                    while (remaining.isGreaterThan(newCosts)) {
+                        remaining = remaining.subtract(newCosts);
+                        remainingRounds++;
+                    }
+                    System.out.println("Remaining game rounds: " + remainingRounds);
+
+                }
+                System.out.println("---------------------------------------");
+
+                System.out.println("Would you like to hire one of the applicants above? ((y)es/no)");
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("yes") || input.equals("y")) {
+                    // new applicant will always be employed at the first office
+                    System.out.println("Please enter the number of the applicant you would like to apply.");
+                    int applNum = scanner.nextInt() - 1;
+                    scanner.nextLine();
+                    try {
+                        var a = studio.getApplications().get(applNum);
+                        studio.acceptApplication(a, studio.getOffices().get(0));
+                        System.out.println(studio.getApplications().get(applNum).getDeveloper().getName().getName() + " was hired successfully");
+                        studio.setApplications(studio.getApplications().stream().filter(application -> application != a).toList());
+                    } catch (Exception e) {
+                        System.out.println("Please enter a valid applicant number");
+                        throw e;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                System.out.println("no open applications.");
+                System.out.println("---------------------------------------");
             }
-            System.out.println("Remaining game rounds: " + remainingRounds);
-
-        }
-        System.out.println("---------------------------------------");
-
-        System.out.println("Would you like to hire one of the above? (yes/no)");
-        String input = scanner.nextLine();
-        if (input.equalsIgnoreCase("yes") || input.equals("y")) {
-            // new applicant will always be employed at the first office
-            //studio.acceptApplication(studio.getApplications().get(inputInt), studio.getOffices().get(0));
-            System.out.println("Please enter a valid application number or die ");
-            int inputInt = scanner.nextInt();
-            scanner.nextLine();
-
-
-
-
         }
     }
 
-    public static Money calcCosts(GameDevStudio studio) {
+    public static Money calcCosts(@NotNull GameDevStudio studio) {
         Money sum = new Money(new BigDecimal(0));
 
         for (int i = 0; i < studio.getOffices().size(); i++) {
@@ -104,56 +112,129 @@ public class SubMenus {
         return sum;
     }
 
-    public static void projects(GameDevStudio studio) {
+    public static void projects(@NotNull GameDevStudio studio) {
 
-        for(int i = 0; i < studio.getProjectBoard().get().size(); i++){
-            System.out.println(i+". " + studio.getProjectBoard().get().get(i).getName().getName());
+        System.out.println("---------------------------------------");
+        if (!studio.getProjectBoard().get().isEmpty()) {
+
+            for (int i = 0; i < studio.getProjectBoard().get().size(); i++) {
+                System.out.println(i + 1 + ". " + studio.getProjectBoard().get().get(i).getName().getName());
+            }
+            System.out.println("---------------------------------------");
+
+
+            System.out.println("please select one of the projects above: ");
+            int projNum = scanner.nextInt() - 1;
+            scanner.nextLine();
+            Project currentProject = studio.getProjectBoard().get().get(projNum);
+
+            System.out.println("name: " + studio.getProjectBoard().get().get(projNum).getName().getName());
+            System.out.println("customer: " + studio.getProjectBoard().get().get(projNum).getCustomer().getName());
+            System.out.println("deadline: in " + studio.getProjectBoard().get().get(projNum).getDeadline().getNumber() + " days");
+            System.out.println("reward: " + studio.getProjectBoard().get().get(projNum).getReward());
+            Developer dev = getBestDev(studio, projNum);
+            if (dev != null) {
+                System.out.println("---------------------------------------");
+                System.out.println("best suited developer for this project: " + dev.getName().getName());
+                System.out.println("should " + dev.getName().getName() + "be commissioned for this project? ((y)es/no)");
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("yes") || input.equals("y")) {
+                    dev.setWorkingOn(studio.getProjectBoard().get().get(projNum));
+                    System.out.println("project successfully assigned");
+
+                    studio.setProjectBoard(new ProjectBoard(studio.getProjectBoard().get().stream().filter(project -> project != currentProject).toList()));
+
+                    System.out.println("---------------------------------------");
+                }
+            } else {
+                System.out.println("there are no developers available");
+            }
+        } else {
+            System.out.println("no projects available");
+            System.out.println("---------------------------------------");
         }
-
-
-        System.out.println("please select one of the above: ");
-        int input = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("name: " + studio.getProjectBoard().get().get(input).getName().getName());
-        System.out.println("customer: " + studio.getProjectBoard().get().get(input).getCustomer().getName());
-        System.out.println("deadline: in " + studio.getProjectBoard().get().get(input).getDeadline().getNumber() + " days");
-        System.out.println("reward: " + studio.getProjectBoard().get().get(input).getReward());
-        Developer dev = timeCalc(studio, input);
-        if(dev != null){
-            System.out.println("best suited developer for this project: " + dev.getName().getName());
-        }else{
-            System.out.println("there are no developers available");
-        }
-
     }
 
-    public static Developer timeCalc(GameDevStudio studio, int input) {
-        Developer help = null;
+    public static Developer getBestDev(@NotNull GameDevStudio studio, int projNum) {
 
-            for(int k = 0; k < studio.getOffices().size(); k++){
-                for(int l = 0; l < studio.getOffices().get(k).getDevelopers().size(); l++){
+        Developer best = null;
+        int help = 100; //help var for bubble sort
+        int maxDays = 0; //days that a particular dev needs for the project.
 
+        Skillset effort = studio.getProjectBoard().get().get(projNum).getEffort();
 
+        for (int k = 0; k < studio.getOffices().size(); k++) {
+            for (int l = 0; l < studio.getOffices().get(k).getDevelopers().size(); l++) {
 
-                    //if (studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn() == null && studio.getOffices().get(k).getDevelopers().get(l).getSkills().equals(studio.getProjectBoard().get().get(input).getEffort()))
-                    {
-                        //Test der verfügbaren Developer
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn());
-                        System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getSkills());
-                        System.out.println(studio.getProjectBoard().get().get(input).getEffort());
-                        System.out.println("");
-                        System.out.println("");
-                        help = studio.getOffices().get(k).getDevelopers().get(l);
+                Developer currentDev = studio.getOffices().get(k).getDevelopers().get(l);
+
+                //only takes a dev into consideration if he's working on no other project at the time.
+                if (currentDev.getWorkingOn() == null) {
+
+                    Skillset devSkills = studio.getOffices().get(k).getDevelopers().get(l).getSkills();
+                    int days = 0;
+
+                    try {
+
+                        //Coding
+                        if (effort.getCoding() % devSkills.getCoding() == 0) {
+                            days = effort.getCoding() / devSkills.getCoding();
+                        } else {
+                            days = effort.getCoding() / devSkills.getCoding() + 1;
+                        }
+                        if (days > maxDays) maxDays = days;
+
+                        //Design
+                        if (effort.getDesign() % devSkills.getDesign() == 0) {
+                            days = effort.getDesign() / devSkills.getDesign();
+                        } else {
+                            days = effort.getDesign() / devSkills.getDesign() + 1;
+                        }
+                        if (days > maxDays) maxDays = days;
+
+                        //Research
+                        if (effort.getResearch() % devSkills.getResearch() == 0) {
+                            days = effort.getResearch() / devSkills.getResearch();
+                        } else {
+                            days = effort.getResearch() / devSkills.getResearch() + 1;
+                        }
+                        if (days > maxDays) maxDays = days;
+
+                        //Testing
+                        if (effort.getTesting() % devSkills.getTesting() == 0) {
+                            days = effort.getTesting() / devSkills.getTesting();
+                        } else {
+                            days = effort.getTesting() / devSkills.getTesting() + 1;
+                        }
+                        if (days > maxDays) maxDays = days;
+
+                        System.out.println(currentDev.getName().getName() + ": " + maxDays + " to finish");
+
+                        if (maxDays < help) {
+                            help = maxDays;
+                            best = currentDev;
+                        }
+                    } catch (ArithmeticException e) {
+
                     }
-
                 }
-
             }
-
-
-        return help;
+            /**
+             {
+             //Test available devs
+             System.out.println();
+             System.out.println();
+             System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn());
+             System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getSkills());
+             System.out.println(studio.getProjectBoard().get().get(projNum).getEffort());
+             System.out.println();
+             System.out.println();
+             best = studio.getOffices().get(k).getDevelopers().get(l);
+             }
+             **/
+        }
+        ;
+        return best;
     }
 
 }

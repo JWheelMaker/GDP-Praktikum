@@ -3,19 +3,14 @@ package Pruefung;
 import gmbh.kdb.hsw.gdp.Game;
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 
-import java.util.List;
 
 import java.util.Scanner;
 
 public class MainMenu {
-    private static Scanner sc = new Scanner(System.in);
-
+    private static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Game.create(studio -> {
-
-            return menu(studio);
-        }).start();
+        Game.create(MainMenu::menu).start();
         //merkel();
     }
 
@@ -25,21 +20,24 @@ public class MainMenu {
         System.out.println("1 to continue ");
         System.out.println("2 for evaluation");
         System.out.println("3 for applicants");
-        System.out.println("4 project-menu");
+        System.out.println("4 for project-menu");
     }
 
     public static boolean menu(GameDevStudio studio) {
-        while (true) { // see case 2
+        while (true) {
+
+            //getting user input
             printMenu();
-            System.out.println("");
+            System.out.println();
             var input = sc.nextInt();
             sc.nextLine();
+
             switch (input) {
-                case 0: {
+                case 0 -> {
                     System.out.println("game stopped");
-                    return false;
+                    return false; //if "false" is returned, the game will be stopped
                 }
-                case 1: {
+                case 1 -> {
                     if ((studio.getCash().getValue().intValue() <= 0)) {
                         System.out.println("You are bankrupt!");
                         return false;
@@ -55,22 +53,19 @@ public class MainMenu {
                     return true;
 
                 }
-                case 2: {
+                case 2 -> {
                     System.out.println("Evaluation: ");
                     SubMenus.evaluation(studio, Game.get().getEventLog());
-                    break; //ensures ability to make a decision despite evaluating
                 }
-                case 3: {
+                case 3 -> {
                     System.out.println("applicants: ");
                     SubMenus.applicants(studio);
-                    break;
                 }
-                case 4: {
-                    System.out.println("projects");
+                case 4 -> {
+                    System.out.println("projects: ");
                     SubMenus.projects(studio);
-                    break;
                 }
-                default: {
+                default -> {
                     System.out.println("not a valid input. The game will be stopped.");
                     return false;
                 }

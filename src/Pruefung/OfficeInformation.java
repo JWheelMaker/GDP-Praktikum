@@ -3,7 +3,7 @@ package Pruefung;
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 
 public class OfficeInformation {
-    private GameDevStudio office;
+    private final GameDevStudio office;
 
     /*
     This method outputs all Office information to the console.
