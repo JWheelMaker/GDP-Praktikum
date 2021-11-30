@@ -1,5 +1,6 @@
 package Pruefung;
 
+import gmbh.kdb.hsw.gdp.domain.Developer;
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 import gmbh.kdb.hsw.gdp.domain.Money;
 
@@ -105,7 +106,54 @@ public class SubMenus {
 
     public static void projects(GameDevStudio studio) {
 
+        for(int i = 0; i < studio.getProjectBoard().get().size(); i++){
+            System.out.println(i+". " + studio.getProjectBoard().get().get(i).getName().getName());
+        }
+
+
+        System.out.println("please select one of the above: ");
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("name: " + studio.getProjectBoard().get().get(input).getName().getName());
+        System.out.println("customer: " + studio.getProjectBoard().get().get(input).getCustomer().getName());
+        System.out.println("deadline: in " + studio.getProjectBoard().get().get(input).getDeadline().getNumber() + " days");
+        System.out.println("reward: " + studio.getProjectBoard().get().get(input).getReward());
+        Developer dev = timeCalc(studio, input);
+        if(dev != null){
+            System.out.println("best suited developer for this project: " + dev.getName().getName());
+        }else{
+            System.out.println("there are no developers available");
+        }
+
     }
 
+    public static Developer timeCalc(GameDevStudio studio, int input) {
+        Developer help = null;
+
+            for(int k = 0; k < studio.getOffices().size(); k++){
+                for(int l = 0; l < studio.getOffices().get(k).getDevelopers().size(); l++){
+
+
+
+                    //if (studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn() == null && studio.getOffices().get(k).getDevelopers().get(l).getSkills().equals(studio.getProjectBoard().get().get(input).getEffort()))
+                    {
+                        //Test der verfügbaren Developer
+                        System.out.println("");
+                        System.out.println("");
+                        System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn());
+                        System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getSkills());
+                        System.out.println(studio.getProjectBoard().get().get(input).getEffort());
+                        System.out.println("");
+                        System.out.println("");
+                        help = studio.getOffices().get(k).getDevelopers().get(l);
+                    }
+
+                }
+
+            }
+
+
+        return help;
+    }
 
 }

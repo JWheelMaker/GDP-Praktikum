@@ -67,7 +67,6 @@ public class NumberGuessingGame {
 
         int erg = guess(eingabe);
         System.out.println("Zufallszahl: " + zufall);
-        int erg = guess(eingabe);
         System.out.println("Rückgabe: " + erg);
         return erg;
     }
