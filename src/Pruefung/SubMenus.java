@@ -45,14 +45,14 @@ public class SubMenus {
         }
     }
 
-    public static void applicants(GameDevStudio studio) {
+    public static void applicants(@NotNull GameDevStudio studio) {
         while (true) {
             System.out.println("---------------------------------------");
             if (!studio.getApplications().isEmpty()) {
 
                 Money costs = calcCosts(studio);
 
-                for (int i = 0; i < studio.getApplications().size(); i++) {
+                for (var i = 0; i < studio.getApplications().size(); i++) {
                     System.out.println(i + 1 + ".  " + studio.getApplications().get(i).getDeveloper().getName().getName());
 
                     //subtracting the costs of employing from capital
@@ -62,14 +62,10 @@ public class SubMenus {
 
                     System.out.println("Remaining capital: " + remaining);
 
-                    //calculating the new costs per round and remaining rounds until bankrupt
+
                     Money newCosts = costs.add(studio.getApplications().get(i).getDeveloper().getSalary());
-                    int remainingRounds = 0;
-                    while (remaining.isGreaterThan(newCosts)) {
-                        remaining = remaining.subtract(newCosts);
-                        remainingRounds++;
-                    }
-                    System.out.println("Remaining game rounds: " + remainingRounds);
+
+                    System.out.println("Remaining game rounds: " + remainingDays(studio, newCosts));
 
                 }
                 System.out.println("---------------------------------------");
@@ -96,6 +92,7 @@ public class SubMenus {
             } else {
                 System.out.println("no open applications.");
                 System.out.println("---------------------------------------");
+                break;
             }
         }
     }
@@ -110,6 +107,16 @@ public class SubMenus {
             }
         }
         return sum;
+    }
+
+    public static int remainingDays(@NotNull GameDevStudio studio, Money costs) {
+        var remainingRounds = 0;
+        var remaining = studio.getCash();
+        while (remaining.isGreaterThan(costs)) {
+            remaining = remaining.subtract(costs);
+            remainingRounds++;
+        }
+        return remainingRounds;
     }
 
     public static void projects(@NotNull GameDevStudio studio) {
@@ -128,15 +135,18 @@ public class SubMenus {
             scanner.nextLine();
             Project currentProject = studio.getProjectBoard().get().get(projNum);
 
+
             System.out.println("name: " + studio.getProjectBoard().get().get(projNum).getName().getName());
             System.out.println("customer: " + studio.getProjectBoard().get().get(projNum).getCustomer().getName());
             System.out.println("deadline: in " + studio.getProjectBoard().get().get(projNum).getDeadline().getNumber() + " days");
             System.out.println("reward: " + studio.getProjectBoard().get().get(projNum).getReward());
+            System.out.println("running costs: " + calcCosts(studio));
+            System.out.println("remaining game rounds: " + remainingDays(studio, calcCosts(studio)));
             Developer dev = getBestDev(studio, projNum);
             if (dev != null) {
                 System.out.println("---------------------------------------");
                 System.out.println("best suited developer for this project: " + dev.getName().getName());
-                System.out.println("should " + dev.getName().getName() + "be commissioned for this project? ((y)es/no)");
+                System.out.println("should " + dev.getName().getName() + " be commissioned for this project? ((y)es/no)");
                 String input = scanner.nextLine();
                 if (input.equalsIgnoreCase("yes") || input.equals("y")) {
                     dev.setWorkingOn(studio.getProjectBoard().get().get(projNum));
@@ -159,6 +169,7 @@ public class SubMenus {
 
         Developer best = null;
         int help = 100; //help var for bubble sort
+        var days = 0; //days a specific dev needs to fulfill a task
         int maxDays = 0; //days that a particular dev needs for the project.
 
         Skillset effort = studio.getProjectBoard().get().get(projNum).getEffort();
@@ -167,74 +178,77 @@ public class SubMenus {
             for (int l = 0; l < studio.getOffices().get(k).getDevelopers().size(); l++) {
 
                 Developer currentDev = studio.getOffices().get(k).getDevelopers().get(l);
+                Skillset devSkills = studio.getOffices().get(k).getDevelopers().get(l).getSkills();
 
                 //only takes a dev into consideration if he's working on no other project at the time.
                 if (currentDev.getWorkingOn() == null) {
 
-                    Skillset devSkills = studio.getOffices().get(k).getDevelopers().get(l).getSkills();
-                    int days = 0;
-
-                    try {
-
-                        //Coding
-                        if (effort.getCoding() % devSkills.getCoding() == 0) {
-                            days = effort.getCoding() / devSkills.getCoding();
+                    if (effort.getCoding() != 0) {
+                        if (devSkills.getCoding() != 0) {
+                            if (effort.getCoding() % devSkills.getCoding() == 0) {
+                                days = effort.getCoding() / devSkills.getCoding();
+                            } else {
+                                days = effort.getCoding() / devSkills.getCoding() + 1;
+                            }
+                            if (days > maxDays) maxDays = days;
                         } else {
-                            days = effort.getCoding() / devSkills.getCoding() + 1;
+                            //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
+                            continue;
                         }
-                        if (days > maxDays) maxDays = days;
+                    }
 
-                        //Design
-                        if (effort.getDesign() % devSkills.getDesign() == 0) {
-                            days = effort.getDesign() / devSkills.getDesign();
+                    if (effort.getDesign() != 0) {
+                        if (devSkills.getDesign() != 0) {
+                            if (effort.getDesign() % devSkills.getDesign() == 0) {
+                                days = effort.getDesign() / devSkills.getDesign();
+                            } else {
+                                days = effort.getDesign() / devSkills.getDesign() + 1;
+                            }
+                            if (days > maxDays) maxDays = days;
                         } else {
-                            days = effort.getDesign() / devSkills.getDesign() + 1;
+                            //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
+                            continue;
                         }
-                        if (days > maxDays) maxDays = days;
+                    }
 
-                        //Research
-                        if (effort.getResearch() % devSkills.getResearch() == 0) {
-                            days = effort.getResearch() / devSkills.getResearch();
+                    if (effort.getResearch() != 0) {
+                        if (devSkills.getResearch() != 0) {
+                            if (effort.getResearch() % devSkills.getResearch() == 0) {
+                                days = effort.getResearch() / devSkills.getResearch();
+                            } else {
+                                days = effort.getResearch() / devSkills.getResearch() + 1;
+                            }
+                            if (days > maxDays) maxDays = days;
                         } else {
-                            days = effort.getResearch() / devSkills.getResearch() + 1;
+                            //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
+                            continue;
                         }
-                        if (days > maxDays) maxDays = days;
+                    }
 
-                        //Testing
-                        if (effort.getTesting() % devSkills.getTesting() == 0) {
-                            days = effort.getTesting() / devSkills.getTesting();
+                    if (effort.getTesting() != 0) {
+                        if (devSkills.getTesting() != 0) {
+                            if (effort.getTesting() % devSkills.getTesting() == 0) {
+                                days = effort.getTesting() / devSkills.getTesting();
+                            } else {
+                                days = effort.getTesting() / devSkills.getTesting() + 1;
+                            }
+                            if (days > maxDays) maxDays = days;
                         } else {
-                            days = effort.getTesting() / devSkills.getTesting() + 1;
+                            //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
+                            continue;
                         }
-                        if (days > maxDays) maxDays = days;
+                    }
 
-                        System.out.println(currentDev.getName().getName() + ": " + maxDays + " to finish");
-
-                        if (maxDays < help) {
-                            help = maxDays;
-                            best = currentDev;
-                        }
-                    } catch (ArithmeticException e) {
-
+                    //Bubble sorting for the best dev
+                    //If multiple devs have the same "score" the first one will be chosen
+                    if (maxDays < help) {
+                        help = maxDays;
+                        best = currentDev;
                     }
                 }
             }
-            /**
-             {
-             //Test available devs
-             System.out.println();
-             System.out.println();
-             System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getWorkingOn());
-             System.out.println(studio.getOffices().get(k).getDevelopers().get(l).getSkills());
-             System.out.println(studio.getProjectBoard().get().get(projNum).getEffort());
-             System.out.println();
-             System.out.println();
-             best = studio.getOffices().get(k).getDevelopers().get(l);
-             }
-             **/
+
         }
-        ;
         return best;
     }
-
 }
