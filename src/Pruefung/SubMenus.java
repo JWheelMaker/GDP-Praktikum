@@ -121,6 +121,9 @@ public class SubMenus {
 
     public static void projects(@NotNull GameDevStudio studio) {
 
+       // studio.getProjectBoard().get().add(new BossProject());
+        // studio.getProjectBoard().get().stream().filter(project ->
+
         System.out.println("---------------------------------------");
         if (!studio.getProjectBoard().get().isEmpty()) {
 
