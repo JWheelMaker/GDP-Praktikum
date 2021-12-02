@@ -11,7 +11,6 @@ public class MainMenu {
 
     public static void main(String[] args) {
         Game.create(MainMenu::menu).start();
-        //merkel();
     }
 
     public static void printMenu() {
