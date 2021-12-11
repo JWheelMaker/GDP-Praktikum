@@ -24,24 +24,59 @@ public class MainMenu {
 
     public static boolean menu(GameDevStudio studio) {
         while (true) {
+            if (SubMenus.counter < 3) {
+                //getting user input
+                printMenu();
+                System.out.println();
+                var input = sc.nextInt();
+                sc.nextLine();
 
-            //getting user input
-            printMenu();
-            System.out.println();
-            var input = sc.nextInt();
-            sc.nextLine();
+                switch (input) {
+                    case 0 -> {
+                        System.out.println("game stopped");
+                        return false; //if "false" is returned, the game will be stopped
+                    }
+                    case 1 -> {
+                        if ((studio.getCash().getValue().intValue() <= 0)) {
+                            System.out.println("You are bankrupt!");
+                            return false;
+                        }
+                        SubMenus.counter = 0; //counter is reset, in order to continue "freshly in the next round
+                        System.out.println("the game will be continued");
+                        System.out.println("----------------------------------------------------");
+                        System.out.println("the following shows relevant information of your business: ");
+                        System.out.println("studio-name " + studio.getName().getName()); //first .getName() returns address of name, second returns actual name
+                        System.out.println("liquidity: " + studio.getCash());
+                        System.out.println("amount of pending applications: " + studio.getApplications().size());
+                        System.out.println("amount of offices: " + studio.getOffices().size());
+                        System.out.println("----------------------------------------------------");
+                        return true;
 
-            switch (input) {
-                case 0 -> {
-                    System.out.println("game stopped");
-                    return false; //if "false" is returned, the game will be stopped
-                }
-                case 1 -> {
-                    if ((studio.getCash().getValue().intValue() <= 0)) {
-                        System.out.println("You are bankrupt!");
+                    }
+                    case 2 -> {
+                        System.out.println("Evaluation: ");
+                        SubMenus.evaluation(studio, Game.get().getEventLog());
+                    }
+                    case 3 -> {
+                        System.out.println("applicants: ");
+                        SubMenus.applicants(studio);
+                    }
+                    case 4 -> {
+                        System.out.println("projects: ");
+                        SubMenus.projects(studio);
+                    }
+                    default -> {
+                        System.out.println("not a valid input. The game will be stopped.");
                         return false;
                     }
-                    System.out.println("the game will be continued");
+                }
+            }else{
+                if ((studio.getCash().getValue().intValue() <= 0)) {
+                    System.out.println("you are bankrupt!");
+                    return false;
+                }else{
+                    SubMenus.counter = 0; //counter is set to 0, in order to continue "freshly" in the next round
+                    System.out.println("the maximum ammount of turns for this round is reached, the game will be continued...");
                     System.out.println("----------------------------------------------------");
                     System.out.println("the following shows relevant information of your business: ");
                     System.out.println("studio-name " + studio.getName().getName()); //first .getName() returns address of name, second returns actual name
@@ -50,23 +85,6 @@ public class MainMenu {
                     System.out.println("amount of offices: " + studio.getOffices().size());
                     System.out.println("----------------------------------------------------");
                     return true;
-
-                }
-                case 2 -> {
-                    System.out.println("Evaluation: ");
-                    SubMenus.evaluation(studio, Game.get().getEventLog());
-                }
-                case 3 -> {
-                    System.out.println("applicants: ");
-                    SubMenus.applicants(studio);
-                }
-                case 4 -> {
-                    System.out.println("projects: ");
-                    SubMenus.projects(studio);
-                }
-                default -> {
-                    System.out.println("not a valid input. The game will be stopped.");
-                    return false;
                 }
             }
         }
