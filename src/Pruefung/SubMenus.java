@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SubMenus {
+    static boolean testforboss = false;
     static int counter = 0; //counts the quantity of done activities
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -56,9 +57,9 @@ public class SubMenus {
             BossApplication bossApplicant = new BossApplication(developer, hireBonus, hireAgentFee);
             ArrayList<Application> anotherHelpList = new ArrayList<>();
 
-            var testforboss = false;
+
             for(int i = 0; i < studio.getOffices().size();i++){
-                if(studio.getOffices().get(i).getDevelopers().contains(bossApplicant)){
+                if(studio.getOffices().get(i).getDevelopers().contains(bossApplicant) || studio.getApplications().contains(bossApplicant)){
                     testforboss = true;
                 }
             } //testing if the bossApplicant is in one of the offices
