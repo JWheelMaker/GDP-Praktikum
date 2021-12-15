@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Main Class witch runs the Game in the main methode and refers to the other Classes.
  **/
 public class MainMenu {
-    
+
     private static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {

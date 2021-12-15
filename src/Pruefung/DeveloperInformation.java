@@ -7,6 +7,7 @@ public class DeveloperInformation {
 
     /**
      * This Class can collect and print out all information about the Developers.
+     *
      * @param studio {@link GameDevStudio}
      */
     public DeveloperInformation(GameDevStudio studio) {

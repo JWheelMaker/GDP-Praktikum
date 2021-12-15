@@ -7,6 +7,7 @@ public class EventLogInformation {
 
     /**
      * This class takes the passed List to print out the event log.
+     *
      * @param eventLog
      */
     public EventLogInformation(List<String> eventLog) {

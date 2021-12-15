@@ -8,6 +8,7 @@ public class OfficeInformation {
     /**
      * This method outputs all Office information to the console.
      * The name, the number of employees and the rent are displayed.
+     *
      * @param office
      */
     public OfficeInformation(GameDevStudio office) {
