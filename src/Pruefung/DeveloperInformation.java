@@ -5,15 +5,19 @@ import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 public class DeveloperInformation {
     GameDevStudio studio;
 
-    /*
-    This method outputs all information about the employees to the console.
-    The name, the day of the hiring, the satisfaction level, the salary and
-     the current project on which the employee is working are displayed.
+    /**
+     * This Class can collect and print out all information about the Developers.
+     * @param studio {@link GameDevStudio}
      */
     public DeveloperInformation(GameDevStudio studio) {
         this.studio = studio;
     }
 
+    /**
+     * This method outputs all information about the employees to the console.
+     * The name, the day of the hiring, the satisfaction level, the salary and
+     * the current project on which the employee is working are displayed.
+     **/
     public void print() {
         for (int i = 0; i < studio.getOffices().size(); i++) {
             for (int j = 0; j < studio.getOffices().get(i).getDevelopers().size(); j++) {

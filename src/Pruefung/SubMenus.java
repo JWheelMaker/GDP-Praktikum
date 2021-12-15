@@ -49,12 +49,13 @@ public class SubMenus {
 
     public static void applicants(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
-        Developer developer = new Developer(new DeveloperName("Mevin Koenk"), new Money(new BigDecimal(10)), Happiness.create(), null, new Day(1), new Skillset(10, 10, 10, 10));
-        Money hireBonus = new Money(new BigDecimal(10));
-        Money hireAgentFee = new Money(new BigDecimal(10));
-        BossApplication bossApplicant = new BossApplication(developer, hireBonus, hireAgentFee);
-        ArrayList<Application> anotherHelpList = new ArrayList<>();
+        if(!testForBoss){
+            BossApplication bossApplicant = new BossApplication();
+            testForBoss = true;
 
+        }
+
+        ArrayList<Application> anotherHelpList = new ArrayList<>();
 
         for (int i = 0; i < studio.getOffices().size(); i++) {
             if (studio.getOffices().get(i).getDevelopers().contains(bossApplicant) || studio.getApplications().contains(bossApplicant)) {
@@ -62,10 +63,8 @@ public class SubMenus {
             }
         } //testing if the bossApplicant is in one of the offices
 
-        if (testForBoss == false) {
-            for (int i = 0; i < studio.getApplications().size(); i++) {
-                anotherHelpList.add(studio.getApplications().get(i));
-            }
+        if (!testForBoss) {
+            anotherHelpList.addAll(studio.getApplications());
             anotherHelpList.add(bossApplicant);
             studio.setApplications(anotherHelpList);
         }
@@ -146,18 +145,20 @@ public class SubMenus {
         return remainingRounds;
     }
 
+    /**
+     * This methode creates the Boss Project and prints out the project menu.
+     * It then takes the user input to accept projects and assign the best dev by using the bestDev-methode
+     * @param studio
+     */
     public static void projects(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
-        BossProject bossproject = new BossProject();
+        BossProject bossProject = new BossProject();
 
         ArrayList<Project> helpList = new ArrayList<>();
-        if (!studio.getProjectBoard().get().contains(bossproject)) {
-            for (int i = 0; i < studio.getProjectBoard().get().size(); i++) {
+        if (!studio.getProjectBoard().get().contains(bossProject)) {
+            helpList.addAll(studio.getProjectBoard().get());
 
-                helpList.add(studio.getProjectBoard().get().get(i));
-            }
-
-            helpList.add(bossproject);
+            helpList.add(bossProject);
 
             studio.setProjectBoard(new ProjectBoard(helpList));
         }
@@ -212,12 +213,19 @@ public class SubMenus {
         }
     }
 
+    /**
+     * This methode detects the best dev for a certain project.
+     *
+     * @param studio
+     * @param projNum
+     * @return
+     */
     public static Developer getBestDev(GameDevStudio studio, int projNum) {
 
         Developer best = null;
         int help = 100; //help var for bubble sort
         var days = 0; //days a specific dev needs to fulfill a task
-        int maxDays = 0; //days that a particular dev needs for the project.
+        int minDays = 100; //every time a better (faster) is found this is replaced.
 
         Skillset effort = studio.getProjectBoard().get().get(projNum).getEffort();
 
@@ -237,7 +245,8 @@ public class SubMenus {
                             } else {
                                 days = effort.getCoding() / devSkills.getCoding() + 1;
                             }
-                            if (days > maxDays) maxDays = days;
+                            if (days < minDays)
+                                minDays = days; //if the current dev is faster the variable min days will be overwritten
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -251,7 +260,7 @@ public class SubMenus {
                             } else {
                                 days = effort.getDesign() / devSkills.getDesign() + 1;
                             }
-                            if (days > maxDays) maxDays = days;
+                            if (days < minDays) minDays = days;
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -265,7 +274,7 @@ public class SubMenus {
                             } else {
                                 days = effort.getResearch() / devSkills.getResearch() + 1;
                             }
-                            if (days > maxDays) maxDays = days;
+                            if (days < minDays) minDays = days;
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -279,7 +288,7 @@ public class SubMenus {
                             } else {
                                 days = effort.getTesting() / devSkills.getTesting() + 1;
                             }
-                            if (days > maxDays) maxDays = days;
+                            if (days < minDays) minDays = days;
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -288,8 +297,8 @@ public class SubMenus {
 
                     //Bubble sorting for the best dev
                     //If multiple devs have the same "score" the first one will be chosen
-                    if (maxDays < help) {
-                        help = maxDays;
+                    if (minDays < help) {
+                        help = minDays;
                         best = currentDev;
                     }
                 }

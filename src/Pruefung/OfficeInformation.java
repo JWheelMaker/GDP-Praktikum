@@ -5,14 +5,18 @@ import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 public class OfficeInformation {
     private final GameDevStudio office;
 
-    /*
-    This method outputs all Office information to the console.
-    The name, the number of employees and the rent are displayed.
+    /**
+     * This method outputs all Office information to the console.
+     * The name, the number of employees and the rent are displayed.
+     * @param office
      */
     public OfficeInformation(GameDevStudio office) {
         this.office = office;
     }
 
+    /**
+     * This methode collects and prints ount all Information regarding the offices to the console.
+     */
     public void print() {
         for (int i = 0; i < this.office.getOffices().size(); i++) {
             System.out.println("---------------------------------------");

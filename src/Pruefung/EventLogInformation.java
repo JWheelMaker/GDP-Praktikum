@@ -5,11 +5,17 @@ import java.util.List;
 public class EventLogInformation {
     private final List<String> eventLog;
 
-
+    /**
+     * This class takes the passed List to print out the event log.
+     * @param eventLog
+     */
     public EventLogInformation(List<String> eventLog) {
         this.eventLog = eventLog;
     }
 
+    /**
+     * This methode prints out the event log.
+     */
     public void print() {
         System.out.println("---------------------------------------");
         System.out.println("Event logs of the current game:");

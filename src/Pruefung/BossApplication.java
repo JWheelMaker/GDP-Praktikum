@@ -7,8 +7,14 @@ import java.math.BigDecimal;
 public class BossApplication extends Application {
     
 
-    public BossApplication(Developer developer, Money hireBonus, Money hireAgentFee) {
-        super(developer, hireBonus, hireAgentFee);
+    /**
+     * The BossApplication class extends the ordinary Application to create a "Boss Application".
+     * @param developer
+     * @param hireBonus
+     * @param hireAgentFee
+     */
+    public BossApplication(){
+        super(new Developer(new DeveloperName("Mevin Koenk"), new Money(new BigDecimal(10)), Happiness.create(),null, new Day(1), new Skillset(10, 10, 10, 10)), new Money(new BigDecimal(10)), new Money(new BigDecimal(10)));
 
 
     }
