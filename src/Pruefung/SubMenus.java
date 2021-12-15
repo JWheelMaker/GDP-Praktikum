@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SubMenus {
-    static boolean testForBoss = false;
+    static boolean testForBossAppl = false;
+    static boolean testForBossPro = false;
     static int actionCounter = 0; //counts the quantity of executed actions
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -49,24 +50,16 @@ public class SubMenus {
 
     public static void applicants(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
-        if(!testForBoss){
+        if(!testForBossAppl){
             BossApplication bossApplicant = new BossApplication();
-            testForBoss = true;
+            testForBossAppl = true;
+            ArrayList<Application> anotherHelpList = new ArrayList<>();
 
-        }
+                anotherHelpList.addAll(studio.getApplications());
+                anotherHelpList.add(bossApplicant);
+                studio.setApplications(anotherHelpList);
 
-        ArrayList<Application> anotherHelpList = new ArrayList<>();
 
-        for (int i = 0; i < studio.getOffices().size(); i++) {
-            if (studio.getOffices().get(i).getDevelopers().contains(bossApplicant) || studio.getApplications().contains(bossApplicant)) {
-                testForBoss = true;
-            }
-        } //testing if the bossApplicant is in one of the offices
-
-        if (!testForBoss) {
-            anotherHelpList.addAll(studio.getApplications());
-            anotherHelpList.add(bossApplicant);
-            studio.setApplications(anotherHelpList);
         }
         while (true) {
             System.out.println("---------------------------------------");
@@ -152,16 +145,16 @@ public class SubMenus {
      */
     public static void projects(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
-        BossProject bossProject = new BossProject();
 
-        ArrayList<Project> helpList = new ArrayList<>();
-        if (!studio.getProjectBoard().get().contains(bossProject)) {
+        if(!testForBossPro){
+            BossProject bossProject = new BossProject();
+            ArrayList<Project> helpList = new ArrayList<>();
             helpList.addAll(studio.getProjectBoard().get());
-
             helpList.add(bossProject);
-
             studio.setProjectBoard(new ProjectBoard(helpList));
+            testForBossPro = true;
         }
+
 
         System.out.println("---------------------------------------");
         if (!studio.getProjectBoard().get().isEmpty()) {
