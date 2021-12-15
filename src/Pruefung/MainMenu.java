@@ -60,7 +60,7 @@ public class MainMenu {
                         System.out.println("the game will be continued");
                         System.out.println("----------------------------------------------------");
                         System.out.println("the following shows relevant information of your business: ");
-                        System.out.println("studio-name " + studio.getName().getName()); //first .getName() returns address of name, second returns actual name
+                        System.out.println("studio-name: " + studio.getName().getName()); //first .getName() returns address of name, second returns actual name
                         System.out.println("liquidity: " + studio.getCash());
                         System.out.println("amount of pending applications: " + studio.getApplications().size());
                         System.out.println("amount of offices: " + studio.getOffices().size());

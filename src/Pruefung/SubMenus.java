@@ -50,14 +50,14 @@ public class SubMenus {
 
     public static void applicants(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
-        if(!testForBossAppl){
+        if (!testForBossAppl) {
             BossApplication bossApplicant = new BossApplication();
             testForBossAppl = true;
             ArrayList<Application> anotherHelpList = new ArrayList<>();
 
-                anotherHelpList.addAll(studio.getApplications());
-                anotherHelpList.add(bossApplicant);
-                studio.setApplications(anotherHelpList);
+            anotherHelpList.addAll(studio.getApplications());
+            anotherHelpList.add(bossApplicant);
+            studio.setApplications(anotherHelpList);
 
 
         }
@@ -103,7 +103,6 @@ public class SubMenus {
                         studio.setApplications(studio.getApplications().stream().filter(application -> application != a).toList());
                     } catch (Exception e) {
                         System.out.println("Please enter a valid applicant number");
-                        throw e;
                     }
                 } else {
                     break;
@@ -141,12 +140,13 @@ public class SubMenus {
     /**
      * This methode creates the Boss Project and prints out the project menu.
      * It then takes the user input to accept projects and assign the best dev by using the bestDev-methode
+     *
      * @param studio
      */
     public static void projects(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
 
-        if(!testForBossPro){
+        if (!testForBossPro) {
             BossProject bossProject = new BossProject();
             ArrayList<Project> helpList = new ArrayList<>();
             helpList.addAll(studio.getProjectBoard().get());
@@ -217,8 +217,8 @@ public class SubMenus {
 
         Developer best = null;
         int help = 100; //help var for bubble sort
-        var days = 0; //days a specific dev needs to fulfill a task
-        int minDays = 100; //every time a better (faster) is found this is replaced.
+        var days = 0; //days a specific dev needs to fulfill a task for the current skill
+        int maxDays = 0; //amount of days for the "worst" skill. How many days does a specific dev need for the whole project?
 
         Skillset effort = studio.getProjectBoard().get().get(projNum).getEffort();
 
@@ -238,8 +238,8 @@ public class SubMenus {
                             } else {
                                 days = effort.getCoding() / devSkills.getCoding() + 1;
                             }
-                            if (days < minDays)
-                                minDays = days; //if the current dev is faster the variable min days will be overwritten
+                            if (days > maxDays)
+                                maxDays = days; //if this skill needs more days, maxDays will be increased.
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -253,7 +253,8 @@ public class SubMenus {
                             } else {
                                 days = effort.getDesign() / devSkills.getDesign() + 1;
                             }
-                            if (days < minDays) minDays = days;
+                            if (days > maxDays)
+                                maxDays = days; //if this skill needs more days, maxDays will be increased.
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -267,7 +268,8 @@ public class SubMenus {
                             } else {
                                 days = effort.getResearch() / devSkills.getResearch() + 1;
                             }
-                            if (days < minDays) minDays = days;
+                            if (days > maxDays)
+                                maxDays = days;//if this skill needs more days, maxDays will be increased.
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -281,7 +283,8 @@ public class SubMenus {
                             } else {
                                 days = effort.getTesting() / devSkills.getTesting() + 1;
                             }
-                            if (days < minDays) minDays = days;
+                            if (days > maxDays)
+                                maxDays = days; //if this skill needs more days, maxDays will be increased.
                         } else {
                             //effort for the task != 0 but dev's skill = 0  --> dev cannot solve the task
                             continue;
@@ -290,8 +293,8 @@ public class SubMenus {
 
                     //Bubble sorting for the best dev
                     //If multiple devs have the same "score" the first one will be chosen
-                    if (minDays < help) {
-                        help = minDays;
+                    if (maxDays < help) {
+                        help = maxDays;
                         best = currentDev;
                     }
                 }
