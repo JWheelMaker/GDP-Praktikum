@@ -1,17 +1,15 @@
 package Pruefung;
 
 import gmbh.kdb.hsw.gdp.domain.*;
-import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class SubMenus {
-    static boolean testforboss = false;
-    static int counter = 0; //counts the quantity of done activities
+    static boolean testForBoss = false;
+    static int actionCounter = 0; //counts the quantity of executed actions
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void evaluation(GameDevStudio studio, List<String> eventLog) {
@@ -49,23 +47,23 @@ public class SubMenus {
         }
     }
 
-    public static void applicants(@NotNull GameDevStudio studio) {
-        System.out.println("turns left: " + (3 - counter));
-            Developer developer = new Developer(new DeveloperName("Mevin Koenk"), new Money(new BigDecimal(10)), Happiness.create(), null, new Day(1), new Skillset(10, 10, 10, 10));
-            Money hireBonus = new Money(new BigDecimal(10));
-            Money hireAgentFee = new Money(new BigDecimal(10));
-            BossApplication bossApplicant = new BossApplication(developer, hireBonus, hireAgentFee);
-            ArrayList<Application> anotherHelpList = new ArrayList<>();
+    public static void applicants(GameDevStudio studio) {
+        System.out.println("actions left: " + (3 - actionCounter));
+        Developer developer = new Developer(new DeveloperName("Mevin Koenk"), new Money(new BigDecimal(10)), Happiness.create(), null, new Day(1), new Skillset(10, 10, 10, 10));
+        Money hireBonus = new Money(new BigDecimal(10));
+        Money hireAgentFee = new Money(new BigDecimal(10));
+        BossApplication bossApplicant = new BossApplication(developer, hireBonus, hireAgentFee);
+        ArrayList<Application> anotherHelpList = new ArrayList<>();
 
 
-            for(int i = 0; i < studio.getOffices().size();i++){
-                if(studio.getOffices().get(i).getDevelopers().contains(bossApplicant) || studio.getApplications().contains(bossApplicant)){
-                    testforboss = true;
-                }
-            } //testing if the bossApplicant is in one of the offices
+        for (int i = 0; i < studio.getOffices().size(); i++) {
+            if (studio.getOffices().get(i).getDevelopers().contains(bossApplicant) || studio.getApplications().contains(bossApplicant)) {
+                testForBoss = true;
+            }
+        } //testing if the bossApplicant is in one of the offices
 
-            if(testforboss == false) {
-            for(int i = 0; i < studio.getApplications().size(); i++) {
+        if (testForBoss == false) {
+            for (int i = 0; i < studio.getApplications().size(); i++) {
                 anotherHelpList.add(studio.getApplications().get(i));
             }
             anotherHelpList.add(bossApplicant);
@@ -108,8 +106,8 @@ public class SubMenus {
                         var a = studio.getApplications().get(applNum);
                         studio.acceptApplication(a, studio.getOffices().get(0));
                         System.out.println(studio.getApplications().get(applNum).getDeveloper().getName().getName() + " was hired successfully");
-                        counter++; //incrementing counter by one, because an action was made
-                        System.out.println("you have: " + (3 - counter)+ " turns left");
+                        actionCounter++; //incrementing counter by one, because an action was made
+                        System.out.println("you have: " + (3 - actionCounter) + " actions left");
                         studio.setApplications(studio.getApplications().stream().filter(application -> application != a).toList());
                     } catch (Exception e) {
                         System.out.println("Please enter a valid applicant number");
@@ -126,7 +124,7 @@ public class SubMenus {
         }
     }
 
-    public static Money calcCosts(@NotNull GameDevStudio studio) {
+    public static Money calcCosts(GameDevStudio studio) {
         Money sum = new Money(new BigDecimal(0));
 
         for (int i = 0; i < studio.getOffices().size(); i++) {
@@ -138,7 +136,7 @@ public class SubMenus {
         return sum;
     }
 
-    public static int remainingDays(@NotNull GameDevStudio studio, Money costs) {
+    public static int remainingDays(GameDevStudio studio, Money costs) {
         var remainingRounds = 0;
         var remaining = studio.getCash();
         while (remaining.isGreaterThan(costs)) {
@@ -148,12 +146,12 @@ public class SubMenus {
         return remainingRounds;
     }
 
-    public static void projects(@NotNull GameDevStudio studio) {
-        System.out.println("turns left: " + (3 - counter));
+    public static void projects(GameDevStudio studio) {
+        System.out.println("actions left: " + (3 - actionCounter));
         BossProject bossproject = new BossProject();
 
-            ArrayList<Project> helpList = new ArrayList<>();
-        if(!studio.getProjectBoard().get().contains(bossproject)) {
+        ArrayList<Project> helpList = new ArrayList<>();
+        if (!studio.getProjectBoard().get().contains(bossproject)) {
             for (int i = 0; i < studio.getProjectBoard().get().size(); i++) {
 
                 helpList.add(studio.getProjectBoard().get().get(i));
@@ -175,8 +173,7 @@ public class SubMenus {
 
             System.out.println("please select one of the projects above: ");
             int projNum = scanner.nextInt() - 1;
-            if (projNum == -1)
-            {
+            if (projNum == -1) {
                 return;
             }
             scanner.nextLine();
@@ -200,8 +197,8 @@ public class SubMenus {
 
                     dev.setWorkingOn(studio.getProjectBoard().get().get(projNum));
                     System.out.println("project successfully assigned");
-                    counter++;
-                    System.out.println("you have" + (3 - counter)+ " turns left");
+                    actionCounter++;
+                    System.out.println("you have" + (3 - actionCounter) + " actions left");
                     studio.setProjectBoard(new ProjectBoard(studio.getProjectBoard().get().stream().filter(project -> project != currentProject).toList()));
 
                     System.out.println("---------------------------------------");
@@ -215,7 +212,7 @@ public class SubMenus {
         }
     }
 
-    public static Developer getBestDev(@NotNull GameDevStudio studio, int projNum) {
+    public static Developer getBestDev(GameDevStudio studio, int projNum) {
 
         Developer best = null;
         int help = 100; //help var for bubble sort
@@ -301,7 +298,6 @@ public class SubMenus {
         }
         return best;
     }
-
 
 
 }

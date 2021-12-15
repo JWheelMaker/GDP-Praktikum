@@ -24,7 +24,7 @@ public class MainMenu {
 
     public static boolean menu(GameDevStudio studio) {
         while (true) {
-            if (SubMenus.counter < 3) {
+            if (SubMenus.actionCounter < 3) {
                 //getting user input
                 printMenu();
                 System.out.println();
@@ -41,7 +41,7 @@ public class MainMenu {
                             System.out.println("You are bankrupt!");
                             return false;
                         }
-                        SubMenus.counter = 0; //counter is reset, in order to continue "freshly in the next round
+                        SubMenus.actionCounter = 0; //counter is reset, in order to continue "freshly in the next round
                         System.out.println("the game will be continued");
                         System.out.println("----------------------------------------------------");
                         System.out.println("the following shows relevant information of your business: ");
@@ -75,7 +75,7 @@ public class MainMenu {
                     System.out.println("you are bankrupt!");
                     return false;
                 }else{
-                    SubMenus.counter = 0; //counter is set to 0, in order to continue "freshly" in the next round
+                    SubMenus.actionCounter = 0; //counter is set to 0, in order to continue "freshly" in the next round
                     System.out.println("the maximum ammount of turns for this round is reached, the game will be continued...");
                     System.out.println("----------------------------------------------------");
                     System.out.println("the following shows relevant information of your business: ");
