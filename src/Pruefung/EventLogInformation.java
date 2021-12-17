@@ -2,6 +2,9 @@ package Pruefung;
 
 import java.util.List;
 
+/**
+ * collects and prints out the event log of the game
+ */
 public class EventLogInformation {
     private final List<String> eventLog;
 

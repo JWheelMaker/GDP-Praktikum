@@ -2,11 +2,14 @@ package Pruefung;
 
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 
+/**
+ * collects and prints out all information about the Developers.
+ */
 public class DeveloperInformation {
     GameDevStudio studio;
 
     /**
-     * This Class can collect and print out all information about the Developers.
+     * An Object of this class can collect and print out all information about the Developers.
      *
      * @param studio {@link GameDevStudio}
      */

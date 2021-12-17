@@ -7,12 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * this class handles all Submenus of the game.
+ */
 public class SubMenus {
     static boolean testForBossAppl = false;
     static boolean testForBossPro = false;
     static int actionCounter = 0; //counts the quantity of executed actions
     private static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * prints out the submenu for evaluation
+     * @param studio
+     * @param eventLog
+     */
     public static void evaluation(GameDevStudio studio, List<String> eventLog) {
 
         DeveloperInformation devInfo = new DeveloperInformation(studio);
@@ -29,25 +37,30 @@ public class SubMenus {
 
             //getting user input
             Scanner sc = new Scanner(System.in);
-            var input = sc.nextInt();
+            var input = sc.nextLine();
 
 
             switch (input) {
-                case 1 -> //Event log
+                case "1" -> //Event log
                         eventLogInfo.print();
-                case 2 -> //Office overview
+                case "2" -> //Office overview
                         officeInfo.print();
-                case 3 -> //Developer
+                case "3" -> //Developer
                         devInfo.print();
-                case 4 -> {
+                case "4" -> {
                     return;
                 }
                 default -> {
+                    System.out.println("invalid input");
                 }
             }
         }
     }
 
+    /**
+     * prints out the applications submenu and handles user input to either employ new devs or not
+     * @param studio
+     */
     public static void applicants(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
         if (!testForBossAppl) {
@@ -91,10 +104,11 @@ public class SubMenus {
 
                     // new applicant will always be employed at the first office
                     System.out.println("Please enter the number of the applicant you would like to hire.");
-                    int applNum = scanner.nextInt() - 1;
-                    scanner.nextLine();
 
                     try {
+                        int applNum = scanner.nextInt() - 1;
+                        scanner.nextLine();
+
                         var a = studio.getApplications().get(applNum);
                         studio.acceptApplication(a, studio.getOffices().get(0));
                         System.out.println(studio.getApplications().get(applNum).getDeveloper().getName().getName() + " was hired successfully");
@@ -115,6 +129,11 @@ public class SubMenus {
         }
     }
 
+    /**
+     * calculates the company's running costs and returns it as a new Money Object
+     * @param studio
+     * @return
+     */
     public static Money calcCosts(GameDevStudio studio) {
         Money sum = new Money(new BigDecimal(0));
 
@@ -127,6 +146,12 @@ public class SubMenus {
         return sum;
     }
 
+    /**
+     * calculates and returns the amount of days the company would "survive" if a certain dev would be employed
+     * @param studio
+     * @param costs
+     * @return
+     */
     public static int remainingDays(GameDevStudio studio, Money costs) {
         var remainingRounds = 0;
         var remaining = studio.getCash();
@@ -207,7 +232,7 @@ public class SubMenus {
     }
 
     /**
-     * This methode detects the best dev for a certain project.
+     * This methode detects and returns the best dev for a certain project.
      *
      * @param studio
      * @param projNum

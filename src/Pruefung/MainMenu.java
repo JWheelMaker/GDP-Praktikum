@@ -43,15 +43,15 @@ public class MainMenu {
                 //getting user input
                 printMenu();
                 System.out.println();
-                var input = sc.nextInt();
-                sc.nextLine();
+                var input = sc.nextLine();
+                //sc.nextLine();
 
                 switch (input) {
-                    case 0 -> {
+                    case "0" -> {
                         System.out.println("game stopped");
                         return false; //if "false" is returned, the game will be stopped
                     }
-                    case 1 -> {
+                    case "1" -> {
                         if ((!studio.getCash().isGreaterThan(new Money(new BigDecimal(0))))) {
                             System.out.println("You are bankrupt!");
                             return false;
@@ -68,21 +68,21 @@ public class MainMenu {
                         return true;
 
                     }
-                    case 2 -> {
+                    case "2" -> {
                         System.out.println("Evaluation: ");
                         SubMenus.evaluation(studio, Game.get().getEventLog());
                     }
-                    case 3 -> {
+                    case "3" -> {
                         System.out.println("applicants: ");
                         SubMenus.applicants(studio);
                     }
-                    case 4 -> {
+                    case "4" -> {
                         System.out.println("projects: ");
                         SubMenus.projects(studio);
                     }
                     default -> {
-                        System.out.println("not a valid input. The game will be stopped.");
-                        return false;
+                        System.out.println("not a valid input.");
+                        //return false;
                     }
                 }
             } else {

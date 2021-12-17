@@ -2,6 +2,9 @@ package Pruefung;
 
 import gmbh.kdb.hsw.gdp.domain.GameDevStudio;
 
+/**
+ * collects and prints out all information about the offices
+ */
 public class OfficeInformation {
     private final GameDevStudio office;
 
