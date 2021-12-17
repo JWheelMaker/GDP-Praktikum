@@ -2,7 +2,6 @@ package Pruefung;
 
 import gmbh.kdb.hsw.gdp.domain.*;
 
-import javax.naming.Name;
 import java.math.BigDecimal;
 
 /**

@@ -34,7 +34,7 @@ public class MainMenu {
      * Checks if the max amount of actions is exceeded.
      * If not the user input is checked and the corresponding menu is printed.
      *
-     * @param studio
+     * @param studio passed GameDevStudio for access to game data
      **/
     public static boolean menu(GameDevStudio studio) {
         while (true) {
@@ -80,10 +80,8 @@ public class MainMenu {
                         System.out.println("projects: ");
                         SubMenus.projects(studio);
                     }
-                    default -> {
-                        System.out.println("not a valid input.");
-                        //return false;
-                    }
+                    default -> //return false;
+                            System.out.println("not a valid input.");
                 }
             } else {
                 if ((studio.getCash().isGreaterThan(new Money(new BigDecimal(0))))) {

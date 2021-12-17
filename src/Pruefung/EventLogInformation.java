@@ -11,7 +11,7 @@ public class EventLogInformation {
     /**
      * This class takes the passed List to print out the event log.
      *
-     * @param eventLog
+     * @param eventLog list of event log entries
      */
     public EventLogInformation(List<String> eventLog) {
         this.eventLog = eventLog;

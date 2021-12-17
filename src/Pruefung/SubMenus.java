@@ -18,8 +18,9 @@ public class SubMenus {
 
     /**
      * prints out the submenu for evaluation
-     * @param studio
-     * @param eventLog
+     *
+     * @param studio   passed GameDevStudio for access to game data
+     * @param eventLog list of event log entries
      */
     public static void evaluation(GameDevStudio studio, List<String> eventLog) {
 
@@ -50,25 +51,23 @@ public class SubMenus {
                 case "4" -> {
                     return;
                 }
-                default -> {
-                    System.out.println("invalid input");
-                }
+                default -> System.out.println("invalid input");
             }
         }
     }
 
     /**
      * prints out the applications submenu and handles user input to either employ new devs or not
-     * @param studio
+     *
+     * @param studio passed GameDevStudio for access to game data
      */
     public static void applicants(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
         if (!testForBossAppl) {
             BossApplication bossApplicant = new BossApplication();
             testForBossAppl = true;
-            ArrayList<Application> anotherHelpList = new ArrayList<>();
 
-            anotherHelpList.addAll(studio.getApplications());
+            ArrayList<Application> anotherHelpList = new ArrayList<>(studio.getApplications());
             anotherHelpList.add(bossApplicant);
             studio.setApplications(anotherHelpList);
 
@@ -131,8 +130,9 @@ public class SubMenus {
 
     /**
      * calculates the company's running costs and returns it as a new Money Object
-     * @param studio
-     * @return
+     *
+     * @param studio passed GameDevStudio for access to game data
+     * @return Money Object of the costs
      */
     public static Money calcCosts(GameDevStudio studio) {
         Money sum = new Money(new BigDecimal(0));
@@ -148,9 +148,10 @@ public class SubMenus {
 
     /**
      * calculates and returns the amount of days the company would "survive" if a certain dev would be employed
-     * @param studio
-     * @param costs
-     * @return
+     *
+     * @param studio passed GameDevStudio for access to game data
+     * @param costs  running costs
+     * @return amount of remaining days
      */
     public static int remainingDays(GameDevStudio studio, Money costs) {
         var remainingRounds = 0;
@@ -166,15 +167,14 @@ public class SubMenus {
      * This methode creates the Boss Project and prints out the project menu.
      * It then takes the user input to accept projects and assign the best dev by using the bestDev-methode
      *
-     * @param studio
+     * @param studio passed GameDevStudio for access to game data
      */
     public static void projects(GameDevStudio studio) {
         System.out.println("actions left: " + (3 - actionCounter));
 
         if (!testForBossPro) {
             BossProject bossProject = new BossProject();
-            ArrayList<Project> helpList = new ArrayList<>();
-            helpList.addAll(studio.getProjectBoard().get());
+            ArrayList<Project> helpList = new ArrayList<>(studio.getProjectBoard().get());
             helpList.add(bossProject);
             studio.setProjectBoard(new ProjectBoard(helpList));
             testForBossPro = true;
@@ -234,9 +234,9 @@ public class SubMenus {
     /**
      * This methode detects and returns the best dev for a certain project.
      *
-     * @param studio
-     * @param projNum
-     * @return
+     * @param studio  passed GameDevStudio for access to game data
+     * @param projNum project number to identify a specific project
+     * @return best Dev for this project
      */
     public static Developer getBestDev(GameDevStudio studio, int projNum) {
 

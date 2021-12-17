@@ -12,14 +12,14 @@ public class OfficeInformation {
      * This method outputs all Office information to the console.
      * The name, the number of employees and the rent are displayed.
      *
-     * @param office
+     * @param office passed GameDevStudio for access to game data
      */
     public OfficeInformation(GameDevStudio office) {
         this.office = office;
     }
 
     /**
-     * This methode collects and prints ount all Information regarding the offices to the console.
+     * This methode collects and prints out all Information regarding the offices to the console.
      */
     public void print() {
         for (int i = 0; i < this.office.getOffices().size(); i++) {
