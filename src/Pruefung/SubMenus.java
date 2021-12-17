@@ -217,7 +217,7 @@ public class SubMenus {
                     dev.setWorkingOn(studio.getProjectBoard().get().get(projNum));
                     System.out.println("project successfully assigned");
                     actionCounter++;
-                    System.out.println("you have" + (3 - actionCounter) + " actions left");
+                    System.out.println("you have " + (3 - actionCounter) + " actions left");
                     studio.setProjectBoard(new ProjectBoard(studio.getProjectBoard().get().stream().filter(project -> project != currentProject).toList()));
 
                     System.out.println("---------------------------------------");
@@ -243,7 +243,6 @@ public class SubMenus {
         Developer best = null;
         int help = 100; //help var for bubble sort
         var days = 0; //days a specific dev needs to fulfill a task for the current skill
-        int maxDays = 0; //amount of days for the "worst" skill. How many days does a specific dev need for the whole project?
 
         Skillset effort = studio.getProjectBoard().get().get(projNum).getEffort();
 
@@ -252,6 +251,8 @@ public class SubMenus {
 
                 Developer currentDev = studio.getOffices().get(k).getDevelopers().get(l);
                 Skillset devSkills = studio.getOffices().get(k).getDevelopers().get(l).getSkills();
+
+                int maxDays = 0; //amount of days for the "worst" skill. How many days does a specific dev need for the whole project?
 
                 //only takes a dev into consideration if he's working on no other project at the time.
                 if (currentDev.getWorkingOn() == null) {

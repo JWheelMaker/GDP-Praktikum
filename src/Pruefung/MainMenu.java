@@ -84,7 +84,7 @@ public class MainMenu {
                             System.out.println("not a valid input.");
                 }
             } else {
-                if ((studio.getCash().isGreaterThan(new Money(new BigDecimal(0))))) {
+                if ((!studio.getCash().isGreaterThan(new Money(new BigDecimal(0))))) {
                     System.out.println("you are bankrupt!");
                     return false;
                 } else {
